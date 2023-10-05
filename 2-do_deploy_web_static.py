@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 #distributes an archive to the web servers, using the function do_deploy:
 import os.path
-from fabric.api import env, run, put
+from fabric.api import env
+from fabric.api import run
+from fabric.api import put
 
 env.hosts = ["100.25.37.85", "100.26.228.112"]
 
