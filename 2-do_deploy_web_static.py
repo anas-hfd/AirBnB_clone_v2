@@ -8,7 +8,7 @@ env.hosts = ["100.25.37.85", "100.26.228.112"]
 
 @task
 def do_pack():
-    """1-pack_web_static.py do_pack"""
+#1-pack_web_static.py do_pack
 
     formatted_dt = datetime.now().strftime('%Y%m%d%H%M%S')
     mkdir = "mkdir -p versions"
@@ -21,7 +21,7 @@ def do_pack():
 
 @task
 def do_deploy(archive_path):
-	"""Deploys an archive to a web server."""
+	#Deploys an archive to a web server.
 	try:
 		if not os.path.exists(archive_path):
 			return False
