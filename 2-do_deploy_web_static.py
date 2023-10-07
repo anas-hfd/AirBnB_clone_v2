@@ -23,28 +23,24 @@ def do_pack():
 def do_deploy(archive_path):
      
      """Deploys an archive to a web server."""
-     if os.path.isfile(archive_path) is False:
-            return False
-     file = archive_path.split("/")[-1]
-     name = file.split(".")[0]
+try:
+        if not os.path.exists(archive_path):
+                return False
+        fn_with_ext = os.path.basename(archive_path)
+        fn_no_ext, ext = os.path.splitext(fn_with_ext)
+        dpath = "/data/web_static/releases/"
+        put(archive_path, "/tmp/")
+        run("rm -rf {}{}/".format(dpath, fn_no_ext))
+        run("mkdir -p {}{}/".format(dpath, fn_no_ext))
+        run("tar -xzf /tmp/{} -C {}{}/".format(fn_with_ext, dpath, fn_no_ext))
+        run("rm /tmp/{}".format(fn_with_ext))
+        run("mv {0}{1}/web_static/* {0}{1}/".format(dpath, fn_no_ext))
+        run("rm -rf {}{}/web_static".format(dpath, fn_no_ext))
+        run("rm -rf /data/web_static/current")
+        run("ln -s {}{}/ /data/web_static/current".format(dpath, fn_no_ext))
+        print("New version deployed!")
+        return True
+except Exception:
+        return False
 
-     if put(archive_path, "/tmp/{}".format(file)).failed is True:
-             return False
-     if run("rm -rf /data/web_static/releases/{}/".format(name)).failed is True:
-             return False
-     if run("mkdir -p /data/web_static/releases/{}/".format(name)).failed is True:
-             return False
-     if run("tar -xzf /tmp/{} -c /data/web_static/releases/{}/".format(file, name)).failed is True:
-             return False
-     if run("rm /tmp/{}".format(file)).failed is True:
-             return False
-     if run("mv /data/web_static/releases/{}/web_static/* ""/data/web_static/releases/{}/".format(name, name)).failed is True:
-             return False
-     if run("rm -rf /data/web_static/releases/{}/web_static".format(name)).failed is True:
-             return False
-     if run("rm -rf /data/web_static/current").failed is True:
-             return False
-     if run("ln -s /data/web_static/releases/{}/ /data/web_static/current".format(name)).failed is True:
-            return False
-     return True
           
