@@ -1,31 +1,25 @@
 #!/usr/bin/python3
-#distributes an archive to the web servers, using the function do_deploy:
-import os
-from fabric.api import *
+#Deploy web page to server
+from fabric.api import put, run, env
+from os import path
+
 
 env.hosts = ["100.25.37.85", "100.26.228.112"]
 
 
 def do_deploy(archive_path):
-    #deploys the archive to the web servers
-    if not os.path.exists(archive_path):
+    #distributes an archive to web servers
+
+    if not path.exists(archive_path):
         return False
-
-    # Upload the archive to /tmp/ on the remote servers
-    put(archive_path, '/tmp/')
-
-    # Extract the archive to /data/web_static/releases/
-    archive_filename = os.path.basename(archive_path)
-    archive_name_no_ext = os.path.splitext(archive_filename)[0]
-    remote_path = f'/data/web_static/releases/{archive_name_no_ext}'
-    run(f'mkdir -p {remote_path}')
-    run(f'tar -xzf /tmp/{archive_filename} -C {remote_path}')
-    run(f'rm /tmp/{archive_filename}')
-
-    # Delete the old symbolic link
-    run('rm -f /data/web_static/current')
-
-    # Create a new symbolic link
-    run(f'ln -s {remote_path} /data/web_static/current')
-
+    file_tar = archive_path.split("/")[-1]
+    server_path = "/data/web_static/releases/{}".format(file_tar[:-4])
+    run("mkdir -p {}".format(server_path))
+    put(archive_path, "/tmp/")
+    run("tar -xzf /tmp/{} -C {}".format(file_tar, server_path))
+    run("rm /tmp/{}".format(file_tar))
+    run("mv -f {}/web_static/* {}/".format(server_path, server_path))
+    run('rm -rf {}/web_static'.format(server_path))
+    run("rm -rf /data/web_static/current")
+    run("ln -s {} /data/web_static/current".format(server_path))
     return True
