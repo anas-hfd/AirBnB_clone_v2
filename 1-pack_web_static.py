@@ -2,7 +2,7 @@
 '''Fabric script to generate a .tgz archive from the web_static folder'''
 
 from datetime import datetime
-from fabric.api import local
+from fabric import local
 import os.path
 
 
