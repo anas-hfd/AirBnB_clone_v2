@@ -1,10 +1,31 @@
 #!/usr/bin/python3
 """Deploy web page to server"""
-from fabric.api import put, run, env
+from datetime import datetime
+from fabric.api import put, run, env, local
 from os import path
+import os.path
 
 
 env.hosts = ["100.25.37.85", "100.26.228.112"]
+
+
+def do_pack():
+    '''Creates a .tgz archive from the content of the web_static'''
+    '''create the file and datetime'''
+    date = datetime.utcnow()
+    file = "versions/web_static_{}{}{}{}{}{}.tgz".format(date.year,
+                                                         date.month,
+                                                         date.day,
+                                                         date.hour,
+                                                         date.minute,
+                                                         date.second)
+    '''Return the .tgz archive'''
+    if os.path.isdir("versions") is False:
+        if local("mkdir -p versions").failed is True:
+            return None
+    if local("tar -cvzf {} web_static".format(file)).failed is True:
+        return None
+    return file
 
 
 def do_deploy(archive_path):
