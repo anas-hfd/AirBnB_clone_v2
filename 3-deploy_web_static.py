@@ -9,6 +9,7 @@ import os.path
 
 env.hosts = ["100.25.37.85", "100.26.228.112"]
 
+
 def do_pack():
     '''Creates a .tgz archive from the content of the web_static'''
     '''create the file and datetime'''
@@ -27,6 +28,7 @@ def do_pack():
         return None
     return file
 
+
 def do_deploy(archive_path):
     """distributes an archive to web servers"""
 
@@ -43,6 +45,7 @@ def do_deploy(archive_path):
     run("rm -rf /data/web_static/current")
     run("ln -s {} /data/web_static/current".format(server_path))
     return True
+
 
 def deploy():
     """Create and distribute archives to the web server"""
