@@ -3,7 +3,6 @@
 
 from datetime import datetime
 from fabric.api import put, run, env, local
-from os import path
 import os.path
 
 
@@ -32,7 +31,7 @@ def do_pack():
 def do_deploy(archive_path):
     """distributes an archive to web servers"""
 
-    if not path.exists(archive_path):
+    if not os.path.exists(archive_path):
         return False
     file_tar = archive_path.split("/")[-1]
     server_path = "/data/web_static/releases/{}".format(file_tar[:-4])
