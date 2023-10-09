@@ -5,6 +5,7 @@ from fabric.api import *
 
 env.hosts = ["100.25.37.85", "100.26.228.112"]
 
+
 def do_clean(number=0):
     """Delete out-of-date archives"""
     number = 1 if int(number) == 0 else int(number)
