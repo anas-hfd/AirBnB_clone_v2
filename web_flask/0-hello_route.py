@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""a script taht starts a Flask web application"""
-
+""" a script taht starts a Flask web application """
 from flask import Flask, request
 
 
